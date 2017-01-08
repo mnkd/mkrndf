@@ -58,12 +58,11 @@ func filename(args []string, byteString string) string {
 
 func init() {
 	var b, k, m, g int64
-	var dryRun, version bool
+	var version bool
 	flag.Int64Var(&b, "b", 0, "Byte")
 	flag.Int64Var(&k, "k", 0, "KiB (kibibyte)")
 	flag.Int64Var(&m, "m", 0, "MiB (mebibyte)")
 	flag.Int64Var(&g, "g", 0, "GiB (gibibyte)")
-	flag.BoolVar(&dryRun, "d", false, "A dry run will not create a file.")
 	flag.BoolVar(&version, "v", false, "Print version.")
 	flag.Parse()
 
