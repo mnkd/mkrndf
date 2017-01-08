@@ -14,10 +14,10 @@ const (
 )
 
 var (
-	Version   string
-	Revision  string
-	ByteCount int64
-	Filename  string
+	Version  string
+	Revision string
+	ByteSize int64
+	Filename string
 )
 
 // https://golang.org/doc/effective_go.html#constants
@@ -33,7 +33,7 @@ func printVersion() {
 	fmt.Fprintln(os.Stdout, "Revision:", Revision)
 }
 
-func byteCount(b, k, m, g int64) (int64, string) {
+func byteSize(b, k, m, g int64) (int64, string) {
 	if b > 0 {
 		return int64(b), fmt.Sprintf("%v", b)
 	}
@@ -72,13 +72,13 @@ func init() {
 	}
 
 	var byteString string
-	ByteCount, byteString = byteCount(b, k, m, g)
+	ByteSize, byteString = byteSize(b, k, m, g)
 	Filename = filename(flag.Args(), byteString)
 }
 
 func main() {
 	fmt.Fprintln(os.Stdout, "filename:", Filename)
-	fmt.Fprintln(os.Stdout, "byte    :", ByteCount)
+	fmt.Fprintln(os.Stdout, "byte    :", ByteSize)
 
 	file, err := os.Create(Filename)
 	if err != nil {
@@ -87,10 +87,10 @@ func main() {
 	}
 	defer file.Close()
 
-	mw := NewMonitorWriter(os.Stdout, ByteCount)
+	mw := NewMonitorWriter(os.Stdout, ByteSize)
 	w := io.MultiWriter(file, mw)
 
-	if _, err := io.CopyN(w, rand.Reader, ByteCount); err != nil {
+	if _, err := io.CopyN(w, rand.Reader, ByteSize); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(ExitCodeError)
 	}
