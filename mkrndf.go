@@ -14,10 +14,10 @@ const (
 )
 
 var (
-	Version  string
-	Revision string
-	Byte     int64
-	Filename string
+	Version   string
+	Revision  string
+	ByteCount int64
+	Filename  string
 )
 
 // https://golang.org/doc/effective_go.html#constants
@@ -33,7 +33,7 @@ func printVersion() {
 	fmt.Fprintln(os.Stdout, "Revision:", Revision)
 }
 
-func byte(b, k, m, g int64) (int64, string) {
+func byteCount(b, k, m, g int64) (int64, string) {
 	if b > 0 {
 		return int64(b), fmt.Sprintf("%v", b)
 	}
@@ -73,14 +73,13 @@ func init() {
 	}
 
 	var byteString string
-	Byte, byteString = byte(b, k, m, g)
+	ByteCount, byteString = byteCount(b, k, m, g)
 	Filename = filename(flag.Args(), byteString)
 }
 
 func main() {
 	fmt.Fprintln(os.Stdout, "filename:", Filename)
-	fmt.Fprintln(os.Stdout, "byte    :", Byte)
-	fmt.Fprintf(os.Stdout, "\ncreating... ")
+	fmt.Fprintln(os.Stdout, "byte    :", ByteCount)
 
 	file, err := os.Create(Filename)
 	if err != nil {
@@ -89,11 +88,14 @@ func main() {
 	}
 	defer file.Close()
 
-	if _, err := io.CopyN(file, rand.Reader, Byte); err != nil {
+	mw := NewMonitorWriter(os.Stdout, ByteCount)
+	w := io.MultiWriter(file, mw)
+
+	if _, err := io.CopyN(w, rand.Reader, ByteCount); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(ExitCodeError)
 	}
 
-	fmt.Fprintf(os.Stdout, "done\n")
+	fmt.Fprintf(os.Stdout, "\ndone\n")
 	os.Exit(ExitCodeOK)
 }
