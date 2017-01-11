@@ -44,7 +44,7 @@ func byteSize(b, k, m, g int64) (int64, string) {
 		return m * MB, fmt.Sprintf("%vMiB", m)
 	}
 	if g > 0 {
-		return g * GB, fmt.Sprintf("%vGiB", m)
+		return g * GB, fmt.Sprintf("%vGiB", g)
 	}
 	return 1 * MB, "1MiB"
 }
