@@ -87,8 +87,8 @@ func main() {
 	}
 	defer file.Close()
 
-	mw := NewMonitorWriter(os.Stdout, ByteSize)
-	w := io.MultiWriter(file, mw)
+	monitor := NewMonitorWriter(os.Stdout, ByteSize)
+	w := io.MultiWriter(file, monitor)
 
 	if _, err := io.CopyN(w, rand.Reader, ByteSize); err != nil {
 		fmt.Fprintln(os.Stderr, err)
