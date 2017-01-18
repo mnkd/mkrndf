@@ -1,6 +1,11 @@
 # mkrndf
-mkrndf — Make random data file
+mkrndf — Make a random data file
 
+## Installation
+
+```
+$ go get -u github.com/mnkd/mkrndf
+```
 
 ## Usage
 
